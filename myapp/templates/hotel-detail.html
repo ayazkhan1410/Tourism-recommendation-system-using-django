@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+{% block content %}
+{% block title %}<title>{{hotel.hotel_name}}</title>{% endblock %}
+{% load static %}
+
+<style>
+	.star {
+    cursor: pointer;
+}
+
+.selected {
+    color: gold; /* Change the color to indicate selected stars */
+}
+
+</style>
+<div class="hero-wrap js-fullheight" style="background-image: url('{{ hotel.hotel_image.url }}');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" data-scrollax-parent="true">
+            <div class="col-md-9 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
+                <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span class="mr-2"><a href="{% url 'home' %}">Home</a></span> <span class="mr-2"><a href="{% url 'hotels' %}">Hotel</a></span> <span>Hotel Single</span></p>
+                <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Hotels Details</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="ftco-section ftco-degree-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-md-12 ftco-animate">
+                        <div class="single-slider owl-carousel">
+                            {% for image in feature_images %}
+                            <div class="item">
+                                <div class="hotel-img" style="background-image: url('{{ image.image.url }}');"></div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {% if messages %}
+                    <div class="alert alert-warning" role="">
+
+                    {% for message in messages %}
+
+                    {{message}}   
+
+                    {% endfor %}
+                    </div>    
+                    {% endif %}
+
+                    <div class="col-md-12 hotel-single mt-4 mb-5 ftco-animate">
+                        <span>Best Place to visit in <strong>{{ hotel.city.city }}</strong></span>
+                        <h2>{{ hotel.hotel_name }}</h2>
+
+                        <p class="rate mb-5">
+                            <span class="loc"><a href="#"><i class="icon-map"></i> {{ hotel_name.place_address }}</a></span>
+                            <span class="star">
+                                {% if average_rating %}
+                                    {% for i in "12345" %}
+                                        {% if i|add:"-1" < average_rating %}
+                                            <i class="icon-star"></i>
+                                        {% else %}
+                                            <i class="icon-star-o"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {{ total_ratings }} Rating{% if total_ratings != 1 %}s{% endif %}
+                                {% else %}
+                                    No ratings yet
+                                {% endif %}
+                            </span>
+                        </p>
+
+                        <p>{{ hotel.hotel_desc }}</p>
+                        <div class="d-md-flex mt-5 mb-5">
+                            <ul>
+                                <li>The Big Oxmox advised her not to do so</li>
+                                <li>When she reached the first hills of the Italic Mountains</li>
+                                <li>She had a last view back on the skyline of her hometown</li>
+                                <li>Bookmarksgrove, the headline of Alphabet</li>
+                            </ul>
+                            <ul class="ml-md-5">
+                                <li>Question ran over her cheek, then she continued</li>
+                                <li>Pityful a rethoric question ran</li>
+                                <li>Mountains, she had a last view back on the skyline</li>
+                                <li>Headline of Alphabet Village and the subline</li>
+                            </ul>
+                        </div>
+                        <p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way.</p>
+                    </div>
+
+                    <div class="col-md-12 hotel-single ftco-animate mb-5 mt-4">
+                        <h4 class="mb-4">Take A Tour</h4>
+                        <div class="block-16">
+                            <figure>
+                                <img src="{{ hotel.hotel_image.url }}" alt="Image placeholder" class="img-fluid">
+                            </figure>
+                        </div>
+                    </div>
+
+                    <h2>Book Now</h2>
+                    <hr>
+                    
+                    <form id="booking-form" method="POST" action="{% url 'hotel-create-checkout-session' %}">
+                        {% csrf_token %}
+                        <div class="form-row">
+                    
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control form-control-lg" name="name" placeholder="Name">
+                            </div>
+                    
+                            <div class="form-group col-md-6">
+                                <input type="email" class="form-control form-control-lg" name="email" placeholder="Email">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                    
+                            <div class="form-group col-md-6">
+                                <input type="date" class="form-control form-control-lg" name="date_from" placeholder="Date from" required>
+                            </div>
+                    
+                            <div class="form-group col-md-6">
+                                <input type="date" class="form-control form-control-lg" name="date_to" placeholder="Date to" required>
+                            </div>
+                        </div>
+                    
+                        <div class="form-row">  
+                            <div class="form-group col-md-6">
+                                <div class="select-wrap one-third">
+                    
+                                    <select name="total_persons" id="total_persons" class="form-control form-control-lg">
+                                        <option value="" disabled selected>Total Persons</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </div>
+                            </div>
+                    
+                            <div class="form-group col-md-6">
+                                <div class="select-wrap one-third">
+                    
+                                    <select name="total_rooms" id="total_rooms" class="form-control form-control-lg">
+                                        <option value="" disabled selected>Total Rooms</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <input type="hidden" name="hotel_id" value="{{ hotel.id }}">
+                        <div class="form-row">
+                    
+                            <div class="form-group col-md-12">
+                                <input type="submit" value="Book Now" class="btn btn-primary btn-lg btn-block" onclick="return validateDates()">
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <script>
+                        function validateDates() {
+                            var checkinDate = document.getElementsByName('date_from')[0].value;
+                            var checkoutDate = document.getElementsByName('date_to')[0].value;
+                            if (checkinDate === '' || checkoutDate === '') {
+                                alert('Please select both check-in and check-out dates');
+                                return false;
+                            }
+                            return true;
+                        }
+                    </script>
+                    
+
+                    <div class="col-md-12 hotel-single ftco-animate mb-5 mt-4">
+                        <h4 class="mb-4">You Might Like</h4>
+                        <div class="row">
+                            {% for item in you_may_also_like %}
+                            <div class="col-md-4">
+                                <div class="destination">
+                                    <a href="{% url 'hotel-detail' item.slug %}" class="img img-2" style="background-image: url('{{item.hotel_image.url}}');"></a>
+                                    <div class="text p-3">
+                                        <div class="d-flex">
+                                            <div class="one">
+                                                <h3><a href="{% url 'hotel-detail' item.slug %}">{{item.hotel_name}}</a></h3>
+                                                <p class="rate">
+                                                    {% if item.total_ratings %}
+                                                    <p class="rate">
+                                                        {% for i in "12345" %}
+                                                    {% if i|add:'0' <= item.average_rating %}
+                                                        <i class="icon-star"></i>
+                                                    {% else %}
+                                                        <i class="icon-star-o"></i>
+                                                    {% endif %}
+                                                     {% endfor %}
+                                                  <span>{{ item.total_ratings }} Rating</span>
+                                                    </p>
+                                                {% else %}
+                                                    <p class="no-rating">Not rated yet</p>
+                                                {% endif %}
+                                                </p>
+                                            </div>
+                                            <div class="two">
+                                                <span class="price per-price">${{item.hotel_price}}<br><small>/Per Person</small></span>
+                                            </div>
+                                        </div>
+                                        <p>{{item.hotel_desc}}</p>
+                                        <hr>
+                                        <p class="bottom-area d-flex">
+                                            <span><i class="icon-map-o"></i> {{item.city.city}}</span>
+                                            <span class="ml-auto"><a href="{% url 'hotel-detail' item.slug %}">Book Now</a></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mt-4">
+                        <h4 class="mb-4">Give Your Rating</h4>
+                        <form method="post" class="bg-light p-4 p-md-5 contact-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="place_id" value="{{ hotel.id }}"> <!-- Assuming 'place' is the context variable for the current place -->
+                            <div class="form-group">
+                                <label for="rating">Your Rating</label>
+                                <div id="starRating">
+                                    <span class="star" data-rating="1">&#9733;</span>
+                                    <span class="star" data-rating="2">&#9733;</span>
+                                    <span class="star" data-rating="3">&#9733;</span>
+                                    <span class="star" data-rating="4">&#9733;</span>
+                                    <span class="star" data-rating="5">&#9733;</span>
+                                </div>
+                                <input type="hidden" name="rating" id="rating">
+                            </div>
+                            <div class="form-group">
+                                <label for="review">Your Review</label>
+                                <textarea class="form-control" name="review" id="review" rows="5"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Submit" class="btn btn-primary py-3 px-5">
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const ratingValue = star.dataset.rating;
+                ratingInput.value = ratingValue;
+                stars.forEach(s => {
+                    if (s.dataset.rating <= ratingValue) {
+                        s.classList.add('selected');
+                    } else {
+                        s.classList.remove('selected');
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+{%endblock%}

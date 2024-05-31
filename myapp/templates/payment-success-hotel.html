@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Payment Successful</title>
+{% endblock %}
+{% load static %}
+{% load humanize%}
+{% block content %}
+<div class="hero-wrap js-fullheight" style="background-image: url({% static 'assets/images/2927687.jpg' %});">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" data-scrollax-parent="true">
+            <div class="col-md-9 ftco-animate text-center" data-scrollax="properties: { translateY: '70%' }">
+                <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
+                    <span class="mr-2"><a href="{% url 'home' %}"><strong>  Home  </strong>  </a></span>
+                    <hr>
+                </p>
+                <h1 class="mb-3 bread" style="background-color: black;" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Payment Completed!!</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5" style="background-color: #ffffff;">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Payment Successful <i class="fas fa-check-circle text-success"></i></h5>
+                    <hr>
+                    <p class="card-text">Your booking details:</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td><strong>Hotel:</strong></td>
+                                    <td>{{ booking.hotel.hotel_name }}</td>
+                                    <td><strong>Name:</strong></td>
+                                    <td>{{ booking.guest_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Guest Email:</strong></td>
+                                    <td>{{ booking.guest_email }}</td>
+                                    <td><strong>Total Persons:</strong></td>
+                                    <td>{{ booking.num_adults }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total Price:</strong></td>
+                                    <td>${{ booking.total_price|intcomma }}</td>
+                                    <td><strong>Check-in Date:</strong></td>
+                                    <td>{{ booking.checkin_date }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Check-out Date:</strong></td>
+                                    <td>{{ booking.checkout_date }}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="#" class="btn btn-primary mt-3" onclick="printInvoice()">Print Invoice</a>
+                    <small class="text-muted d-block mt-2">
+                        <strong>Instructions for Printing:</strong> Click the "Print Invoice" button above to open the print dialog. Ensure your printer settings are correctly configured for optimal print quality.
+                    </small>
+                    <br>
+                    <br>
+                    <hr>
+                    <h5 class="card-title">Terms and Conditions</h5>
+                    <p class="card-text">By clicking the "Print Invoice" button, you agree to the following terms and conditions:</p>
+                    <ol>
+                        <li>This invoice is valid only for the specified booking details.</li>
+                        <li>Any alterations to the booking must be made in accordance with the booking policy.</li>
+                        <li>Payments made are non-refundable except as otherwise provided in the booking policy.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+</div>
+
+<script>
+    function printInvoice() {
+        window.print();
+    }
+</script>
+
+{% endblock %}

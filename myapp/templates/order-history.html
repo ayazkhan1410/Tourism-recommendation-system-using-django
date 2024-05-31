@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>Booking History</title>
+{% endblock %}
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+
+
+<div class="hero-wrap js-fullheight" style="background-image: url({% static 'assets/images/chronology.jpg' %});">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" data-scrollax-parent="true">
+            <div class="col-md-9 ftco-animate text-center" data-scrollax="properties: { translateY: '70%' }">
+                <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
+                    <span class="mr-2"><a href="{% url 'home' %}"><strong>  Home  </strong>  </a></span>
+                    <hr>
+                </p>
+                <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Booking History</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if bookings %}
+<div class="container mt-5" style="background-color: #f8f9fa; box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);"> <!-- Add background color and box shadow to the container -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Booking History</h5>
+                    <hr>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Hotel Name</th>
+                                    <th>Hotel Address </th>
+                                    <th>Place Name</th>
+                                    <th> Name</th>
+                                    <th> Email</th>
+                                    <th>Check-in </th>
+                                    <th>Check-out </th>
+                                    <th>Total Price</th>
+                                    <th>Is Paid</th>
+                                    <th>Action</th> 
+                                 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in bookings %}
+                                <tr>
+                                    <td>{{ booking.hotel.hotel_name }}</td>
+                                    <td> {{ booking.hotel.hotel_address }}</td>
+                                    <td>{{ booking.place.place_name }}</td>
+                                    <td>{{ booking.guest_name }}</td>
+                                    <td>{{ booking.guest_email }}</td>
+                                    <td>{{ booking.checkin_date }}</td>
+                                    <td>{{ booking.checkout_date }}</td>
+                                    <td>${{ booking.total_price|intcomma }}</td>
+                                    <td>{{ booking.is_completed }}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-primary mt-3" onclick="printInvoice()">Print Invoice</a>
+                                    </td>
+                                    <!-- Display is_completed -->
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% else %}
+<div class="container mt-5" style="background-color: #f8f9fa; box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);"> <!-- Add background color and box shadow to the container -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title
+                        text-danger">No Bookings Found</h5>
+                    <hr>
+                    <p class="card-text">You have not made any bookings yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    function printInvoice() {
+        window.print();
+    }
+</script>
+{% endblock %}
